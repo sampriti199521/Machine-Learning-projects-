@@ -1,30 +1,52 @@
-# Machine-Learning-projects-
-# 🎬 Movie Hit Predictor (Beginner ML Project)
+# STEP 1: Install required libraries (run only in Google Colab)
+# !pip install pandas scikit-learn matplotlib seaborn
 
-This project predicts whether a movie will be a box office hit based on budget, runtime, and popularity using a logistic regression model.
+# STEP 2: Import required libraries
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 
-## 🚀 Features
-- Beginner-friendly ML in Python
-- Uses TMDB movie dataset
-- Built in Google Colab
+# STEP 3: Load dataset (upload 'tmdb_5000_movies.csv' to your Colab/Jupyter environment)
+df = pd.read_csv('/content/tmdb_5000_movies.csv')  # Update the path as needed
 
-## 🛠 Requirements
-- Google Colab or Jupyter
-- pandas, scikit-learn
+# STEP 4: Clean data - remove rows with zero budget or revenue
+df = df[df['budget'] > 0]
+df = df[df['revenue'] > 0]
 
-## 📁 Files
-- `Movie_Hit_Predictor.ipynb` — Colab notebook
-- `tmdb_5000_movies.csv` — dataset (from Kaggle)
-- *(Optional)* `guide.pdf` — step-by-step walkthrough
+# STEP 5: Add a 'success' column (1 if revenue > 2x budget)
+df['success'] = (df['revenue'] > df['budget'] * 2).astype(int)
 
-## 📦 Dataset
-Get the TMDB dataset from:  
-https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata
+# STEP 6: Select features and label
+X = df[['budget', 'runtime', 'popularity']]
+y = df['success']
 
-## ✅ How to Run
-1. Open `Movie_Hit_Predictor.ipynb` in [Google Colab](https://colab.research.google.com/)
-2. Upload the dataset
-3. Run the cells!
+# STEP 7: Train/test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
----
+# STEP 8: Train a logistic regression model
+model = LogisticRegression(max_iter=1000)
+model.fit(X_train, y_train)
+
+# STEP 9: Evaluate the model
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(f"Model Accuracy: {accuracy * 100:.2f}%")
+
+# STEP 10: Predict sample outputs
+print("Sample Predictions:", model.predict(X_test[:5]))
+print("Actual Labels:     ", y_test[:5].values)
+
+📦 Requirements:
+	•	pandas
+	•	scikit-learn
+
+⸻
+
+🗂 Dataset:
+
+Use this dataset from Kaggle:
+🔗 TMDB 5000 Movie Dataset
+
+Save the CSV (tmdb_5000_movies.csv) and upload it to your runtime before running the code.
 
